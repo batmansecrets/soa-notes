@@ -1,0 +1,685 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a2e;--ink2:#2d2d4e;--ink3:#555577;
+  --accent:#5046e5;--accent2:#e5467a;--accent3:#00b894;--accent4:#f39c12;
+  --bg:#fafaf8;--bg2:#f0eff8;--bg3:#e8e7f5;
+  --card:#ffffff;--mono:'IBM Plex Mono',monospace;
+  --sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;padding:0}
+
+.hero{background:var(--ink);color:#fff;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden}
+.hero::before{content:'SOA';position:absolute;right:-20px;top:-30px;font-family:var(--display);font-size:160px;font-weight:800;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none}
+.hero-tag{font-family:var(--mono);font-size:11px;color:var(--accent);background:rgba(80,70,229,0.18);border:1px solid rgba(80,70,229,0.4);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:1rem;letter-spacing:.08em;text-transform:uppercase}
+.hero h1{font-family:var(--display);font-size:2.2rem;font-weight:800;line-height:1.1;margin-bottom:.6rem}
+.hero h1 span{color:var(--accent)}
+.hero p{color:rgba(255,255,255,0.55);font-size:14px;max-width:500px;font-weight:300}
+
+.toc{background:var(--bg2);border-left:3px solid var(--accent);padding:1.5rem 2rem;margin:0}
+.toc-title{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 16px}
+.toc a{color:var(--ink3);font-size:13px;text-decoration:none;padding:2px 0;display:block;transition:color .15s}
+.toc a:hover{color:var(--accent)}
+.toc a::before{content:counter(toc-c, decimal-leading-zero) ' ';counter-increment:toc-c;font-family:var(--mono);font-size:10px;color:var(--accent);margin-right:6px}
+.toc{counter-reset:toc-c}
+
+.section{padding:2.5rem 2.5rem 2rem;border-bottom:.5px solid var(--bg3)}
+.section:last-child{border-bottom:none}
+
+.sec-header{display:flex;align-items:center;gap:12px;margin-bottom:1.8rem}
+.sec-num{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--bg2);border:1px solid var(--bg3);padding:3px 10px;border-radius:4px}
+.sec-title{font-family:var(--display);font-size:1.35rem;font-weight:700;color:var(--ink)}
+
+.easy-box{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%);border:1px solid var(--bg3);border-left:4px solid var(--accent3);border-radius:8px;padding:1.2rem 1.4rem;margin-bottom:1.5rem}
+.easy-label{font-family:var(--mono);font-size:10px;color:var(--accent3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}
+.easy-box p{font-size:14.5px;color:var(--ink2);line-height:1.7}
+
+.def-box{background:var(--card);border:1px solid var(--bg3);border-left:4px solid var(--accent);border-radius:8px;padding:1.2rem 1.4rem;margin-bottom:1rem}
+.def-label{font-family:var(--mono);font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem}
+.def-box p{font-size:14px;color:var(--ink2)}
+.def-box strong{color:var(--ink);font-weight:500}
+
+.tree{background:var(--card);border:1px solid var(--bg3);border-radius:10px;padding:1.4rem;margin:1.2rem 0;font-family:var(--mono);font-size:13px;overflow-x:auto}
+.tree-title{font-family:var(--display);font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}
+.tree pre{color:var(--ink2);line-height:1.9;white-space:pre}
+.tree .node-root{color:var(--accent);font-weight:500}
+.tree .node-l1{color:var(--ink)}
+.tree .node-l2{color:var(--ink3)}
+.tree .node-l3{color:#888}
+.tree .tag{background:var(--bg2);color:var(--accent);font-size:10px;padding:1px 6px;border-radius:3px;margin-left:6px}
+
+.pill-grid{display:flex;flex-wrap:wrap;gap:8px;margin:.8rem 0}
+.pill{background:var(--bg2);border:1px solid var(--bg3);border-radius:20px;padding:5px 14px;font-size:13px;color:var(--ink2)}
+.pill.accent{background:rgba(80,70,229,0.08);border-color:rgba(80,70,229,0.25);color:var(--accent)}
+.pill.green{background:rgba(0,184,148,0.08);border-color:rgba(0,184,148,0.25);color:var(--accent3)}
+.pill.red{background:rgba(229,70,122,0.08);border-color:rgba(229,70,122,0.25);color:var(--accent2)}
+
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:13px}
+.compare-table th{background:var(--ink);color:#fff;font-family:var(--display);font-weight:600;font-size:12px;padding:10px 14px;text-align:left;letter-spacing:.04em}
+.compare-table td{padding:9px 14px;border-bottom:.5px solid var(--bg3);color:var(--ink2);vertical-align:top}
+.compare-table tr:nth-child(even) td{background:var(--bg)}
+.compare-table .feature-col{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:500}
+
+.callout{display:flex;gap:12px;background:var(--bg2);border-radius:8px;padding:1rem 1.2rem;margin:.8rem 0;align-items:flex-start}
+.callout-icon{font-family:var(--mono);font-size:12px;background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.callout p{font-size:13.5px;color:var(--ink2)}
+.callout.warn .callout-icon{background:var(--accent4)}
+.callout.good .callout-icon{background:var(--accent3)}
+.callout.bad .callout-icon{background:var(--accent2)}
+
+.sub-heading{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--ink);margin:1.5rem 0 .6rem;display:flex;align-items:center;gap:8px}
+.sub-heading::after{content:'';flex:1;height:.5px;background:var(--bg3)}
+
+.badge{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:3px;margin-left:8px}
+.badge-blue{background:rgba(80,70,229,0.1);color:var(--accent)}
+.badge-green{background:rgba(0,184,148,0.1);color:var(--accent3)}
+.badge-red{background:rgba(229,70,122,0.1);color:var(--accent2)}
+
+.arch-flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:1rem 0}
+.arch-node{background:var(--card);border:1px solid var(--bg3);border-radius:6px;padding:8px 14px;font-size:13px;color:var(--ink2);white-space:nowrap}
+.arch-node.center{background:var(--accent);color:#fff;font-weight:500}
+.arch-arrow{color:var(--ink3);font-size:18px;font-weight:300}
+
+.four-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:1rem 0}
+.four-card{background:var(--card);border:1px solid var(--bg3);border-radius:8px;padding:1rem;text-align:center}
+.four-card-num{font-family:var(--display);font-size:1.6rem;font-weight:800;color:var(--bg3);line-height:1}
+.four-card-title{font-family:var(--display);font-size:.9rem;font-weight:700;color:var(--ink);margin:.3rem 0 .4rem}
+.four-card p{font-size:12px;color:var(--ink3);line-height:1.5}
+
+.soap-anatomy{display:grid;grid-template-columns:1fr;gap:0;margin:1rem 0;border:1px solid var(--bg3);border-radius:10px;overflow:hidden}
+.soap-part{padding:.9rem 1.2rem;display:flex;align-items:center;gap:12px;border-bottom:.5px solid var(--bg3)}
+.soap-part:last-child{border-bottom:none}
+.soap-letter{font-family:var(--display);font-size:1.3rem;font-weight:800;width:36px;flex-shrink:0;text-align:center}
+.soap-name{font-weight:500;font-size:14px;color:var(--ink)}
+.soap-desc{font-size:12.5px;color:var(--ink3)}
+.soap-req{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:3px;margin-left:8px;flex-shrink:0}
+
+.layers-stack{display:flex;flex-direction:column;gap:8px;margin:1rem 0}
+.layer{border-radius:8px;padding:1rem 1.2rem;border-left:4px solid transparent}
+.layer-c{background:rgba(80,70,229,0.06);border-left-color:var(--accent)}
+.layer-b{background:rgba(0,184,148,0.06);border-left-color:var(--accent3)}
+.layer-a{background:rgba(243,156,18,0.07);border-left-color:var(--accent4)}
+.layer-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}
+.layer-c .layer-label{color:var(--accent)}
+.layer-b .layer-label{color:var(--accent3)}
+.layer-a .layer-label{color:var(--accent4)}
+.layer-title{font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--ink);margin-bottom:.25rem}
+.layer p{font-size:13px;color:var(--ink3)}
+
+.mep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:1rem 0}
+.mep-card{background:var(--card);border:1px solid var(--bg3);border-radius:8px;padding:1rem}
+.mep-icon{font-family:var(--mono);font-size:20px;margin-bottom:.5rem}
+.mep-name{font-family:var(--display);font-weight:700;font-size:.85rem;color:var(--ink);margin-bottom:.3rem}
+.mep-desc{font-size:12px;color:var(--ink3)}
+
+footer{background:var(--ink);color:rgba(255,255,255,0.35);padding:1.2rem 2.5rem;font-family:var(--mono);font-size:11px;letter-spacing:.05em;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap}
+footer span{color:var(--accent)}
+</style>
+
+<div class="hero">
+  <div class="hero-tag">Master Notes</div>
+  <h1>Service-Oriented<br><span>Architecture</span></h1>
+  <p>A genius student's complete guide — easy explanations first, then clean definitions, then structure.</p>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <div class="toc-grid">
+    <a href="#s1">What is SOA</a>
+    <a href="#s2">Roots of SOA</a>
+    <a href="#s3">4 Pillars of a Service</a>
+    <a href="#s4">Characteristics</a>
+    <a href="#s5">Concept of a Service</a>
+    <a href="#s6">SOA Architecture</a>
+    <a href="#s7">SOA Triangle</a>
+    <a href="#s8">8 Principles</a>
+    <a href="#s9">Web Services</a>
+    <a href="#s10">SOAP & WSDL</a>
+    <a href="#s11">Message Exchange Patterns</a>
+    <a href="#s12">Coordination</a>
+    <a href="#s13">Data Integrity</a>
+    <a href="#s14">Service Layers</a>
+  </div>
+</div>
+
+<div id="s1" class="section">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">What is SOA?</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>Imagine a restaurant. Instead of one chef doing everything — cooking, billing, cleaning — you have specialists. SOA is the same idea for software: break one giant app into small, focused "services" that each do ONE job and talk to each other.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p><strong>Service-Oriented Architecture (SOA)</strong> is a software design style where a system is built as a collection of discrete, self-contained services — each with a single, well-defined job — that communicate over a network using standardized protocols.</p>
+  </div>
+  <div class="sub-heading">Two Core Rules</div>
+  <div class="pill-grid">
+    <div class="pill accent">🔗 Loose Coupling — services are independent</div>
+    <div class="pill green">📦 Black Box Design — you only use the interface</div>
+  </div>
+  <div class="callout">
+    <span class="callout-icon">SOA vs Micro</span>
+    <p>SOA is "enterprise-wide" and can share resources (like a common database or ESB). Microservices go even smaller — each service is completely independent with its own database.</p>
+  </div>
+</div>
+
+<div id="s2" class="section">
+  <div class="sec-header">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Roots of SOA</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>SOA didn't appear from nowhere. It evolved from three earlier ideas — think of it like three generations of the same family, each solving a bigger problem.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">Evolution Timeline</div>
+    <pre><span class="node-root">SOA (1990s)</span>
+│  The perfect storm: OOP + CBD + EAI, all over HTTP
+│
+├── <span class="node-l1">OOP — Object-Oriented Programming</span><span class="tag">Era 1</span>
+│   ├── <span class="node-l2">Introduced: Objects (data + logic bundled together)</span>
+│   ├── <span class="node-l2">Key Concept: Encapsulation — hide the mess, show the function</span>
+│   └── <span class="node-l2">Limitation: Language-specific (Java can't talk to C++ natively)</span>
+│
+├── <span class="node-l1">CBD — Component-Based Development</span><span class="tag">Era 2</span>
+│   ├── <span class="node-l2">Introduced: Packaged components (.DLL, .JAR files)</span>
+│   ├── <span class="node-l2">Key Concept: Binary Reusability — build once, plug anywhere</span>
+│   └── <span class="node-l2">Limitation: Components had to live on the same server</span>
+│
+└── <span class="node-l1">EAI — Enterprise Application Integration</span><span class="tag">Era 3</span>
+    ├── <span class="node-l2">Introduced: Middleware bridges between old & new systems</span>
+    ├── <span class="node-l2">Key Concept: Interoperability — making different systems talk</span>
+    └── <span class="node-l2">Limitation: Messy "hub-and-spoke", patchwork fix, not planned</span></pre>
+  </div>
+  <div class="callout good">
+    <span class="callout-icon">Birth of SOA</span>
+    <p>Late 1990s: developers combined encapsulation (OOP) + reusability (CBD) + connectivity (EAI) over standard HTTP → Service-Oriented Architecture was born.</p>
+  </div>
+</div>
+
+<div id="s3" class="section">
+  <div class="sec-header">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">4 Pillars of a Service</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>For something to truly count as a "service" in SOA, it must follow 4 rules. Think of them as the service's citizenship requirements.</p>
+  </div>
+  <div class="four-grid">
+    <div class="four-card">
+      <div class="four-card-num">01</div>
+      <div class="four-card-title">Service Contract</div>
+      <p>A formal document (WSDL / OpenAPI) defining what the service does — its promise.</p>
+    </div>
+    <div class="four-card">
+      <div class="four-card-num">02</div>
+      <div class="four-card-title">Reusability</div>
+      <p>The service can be used by many different consumers — built once, used everywhere.</p>
+    </div>
+    <div class="four-card">
+      <div class="four-card-num">03</div>
+      <div class="four-card-title">Abstraction</div>
+      <p>Logic is hidden. You only see the entry point — not the internal code.</p>
+    </div>
+    <div class="four-card">
+      <div class="four-card-num">04</div>
+      <div class="four-card-title">Statelessness</div>
+      <p>Each request contains ALL info needed to complete it. No memory between requests.</p>
+    </div>
+  </div>
+  <div class="sub-heading">The ESB — Enterprise Service Bus</div>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p>The <strong>ESB</strong> is the communication middleware in SOA. It acts as a Universal Translator — routing messages between services and converting formats (e.g., JSON ↔ XML) so services in different languages can understand each other.</p>
+  </div>
+  <div class="arch-flow">
+    <div class="arch-node">Inventory Service (Java)</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node center">ESB</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">Payment Service (Python)</div>
+  </div>
+</div>
+
+<div id="s4" class="section">
+  <div class="sec-header">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">5 Characteristics of SOA</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>These 5 characteristics are what make SOA powerful. If your architecture has all 5, you've got real SOA.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">Characteristics Overview</div>
+    <pre><span class="node-root">SOA Characteristics</span>
+│
+├── <span class="node-l1">1. Loosely Coupled</span> → Independence
+│   └── <span class="node-l2">Services depend on the interface, NOT the implementation</span>
+│       <span class="node-l3">Example: Service A doesn't care if B is Java/Linux/MySQL — only that B is listening</span>
+│
+├── <span class="node-l1">2. Service Contract</span> → Standards
+│   └── <span class="node-l2">Machine-readable "legal agreement" — defines input, output, endpoint</span>
+│       <span class="node-l3">Tools: WSDL (for SOAP), Swagger/OpenAPI (for REST)</span>
+│
+├── <span class="node-l1">3. Abstraction</span> → Simplicity (Black Box)
+│   └── <span class="node-l2">Consumer sees only the interface; internal logic is invisible</span>
+│       <span class="node-l3">Example: You send a 10MB photo, get 1MB back — you don't know how</span>
+│
+├── <span class="node-l1">4. Reusability</span> → Efficiency (DRY Principle)
+│   └── <span class="node-l2">Build one "Identity Service" instead of 3 different login systems</span>
+│       <span class="node-l3">Creates a "Service Library" — new products assembled from existing services</span>
+│
+└── <span class="node-l1">5. Statelessness</span> → Scalability
+    ├── <span class="node-l2">Every request is treated like a "first date" — no memory</span>
+    ├── <span class="node-l2">Bad (Stateful): "Search shoes" → "Filter size 10" (server must remember)</span>
+    └── <span class="node-l2">Good (Stateless): "Search shoes, size 10" → one complete request</span></pre>
+  </div>
+</div>
+
+<div id="s5" class="section">
+  <div class="sec-header">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">Concept of a "Service"</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>A service is not just a function. It's a business capability packaged as software — like hiring a specialist. It's a <em>promise</em>: send me a valid request, and I'll return a valid response, no matter what's happening behind my curtain.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">Anatomy of a Service</div>
+    <pre><span class="node-root">Service</span>
+│
+├── <span class="node-l1">1. Interface</span> — The "Front Door"
+│   └── <span class="node-l2">The API endpoint (REST or SOAP) consumers connect to</span>
+│
+├── <span class="node-l1">2. Logic</span> — The "Worker"
+│   └── <span class="node-l2">The actual code doing the work (calculate tax, verify password)</span>
+│
+└── <span class="node-l1">3. Data</span> — The "Storage"
+    └── <span class="node-l2">Own database OR access to a shared one</span></pre>
+  </div>
+  <div class="sub-heading">Service Granularity</div>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p><strong>Granularity</strong> refers to the "size" of a service — how much it does.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:.8rem 0">
+    <div class="easy-box" style="margin:0;border-left-color:var(--accent)">
+      <div class="easy-label" style="color:var(--accent)">Coarse-grained (SOA prefers this)</div>
+      <p style="font-size:13px">Large service doing a lot. Example: "Checkout Service" — handles tax, shipping, payment, email.</p>
+    </div>
+    <div class="easy-box" style="margin:0;border-left-color:var(--accent2)">
+      <div class="easy-label" style="color:var(--accent2)">Fine-grained (Microservices prefer this)</div>
+      <p style="font-size:13px">Tiny service doing one thing. Example: "Tax Calculation Service" — only calculates tax for a zip code.</p>
+    </div>
+  </div>
+  <div class="sub-heading">Service Categories</div>
+  <table class="compare-table">
+    <tr><th>Type</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td class="feature-col">Entity Services</td><td>Focused on data (CRUD)</td><td>Customer Service, Product Service</td></tr>
+    <tr><td class="feature-col">Task Services</td><td>Focused on a specific action</td><td>Send Email, Calculate Tax</td></tr>
+    <tr><td class="feature-col">Process Services</td><td>Orchestrates other services</td><td>Order Processing, Loan Approval</td></tr>
+  </table>
+</div>
+
+<div id="s6" class="section">
+  <div class="sec-header">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title">Basic SOA Architecture</h2>
+  </div>
+  <div class="tree">
+    <div class="tree-title">Full Architecture Tree</div>
+    <pre><span class="node-root">Service-Oriented Architecture</span>
+│
+├── <span class="node-l1">Application Frontend</span> — The Consumer (TV Remote analogy)
+│   └── <span class="node-l2">User-facing layer. Sends requests, doesn't hold business logic</span>
+│
+├── <span class="node-l1">Services Repository</span> — The Directory (Yellow Pages)
+│   └── <span class="node-l2">Central registry storing URL + Contract of every service</span>
+│
+├── <span class="node-l1">Services Bus (ESB)</span> — The Highway + Translator
+│   └── <span class="node-l2">Routes messages. Converts formats (JSON ↔ XML)</span>
+│
+└── <span class="node-l1">Services</span> — The Providers (actual workers)
+    ├── <span class="node-l2">Contract</span> — The Promise (input/output spec)
+    ├── <span class="node-l2">Interface</span> — The URL endpoint (entry point)
+    └── <span class="node-l2">Implementation</span> — The Black Box
+        ├── <span class="node-l3">Business Logic — The algorithms and rules</span>
+        └── <span class="node-l3">Data — The database</span></pre>
+  </div>
+</div>
+
+<div id="s7" class="section">
+  <div class="sec-header">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title">The SOA Triangle</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>Three players. One workflow. The Provider creates the service, lists it in the Registry, and the Consumer finds it there and connects. Like a job board: companies (Providers) post jobs → job board (Registry) lists them → candidates (Consumers) apply.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">The SOA Triangle Workflow</div>
+    <pre><span class="node-root">SOA Triangle</span>
+│
+├── <span class="node-l1">Service Provider</span> — "The Expert"
+│   ├── <span class="node-l2">Builds and hosts the service</span>
+│   ├── <span class="node-l2">Owns the data and processing power</span>
+│   └── <span class="node-l2">PUBLISHES to the Registry</span>
+│
+├── <span class="node-l1">Service Registry (Broker)</span> — "Yellow Pages"
+│   ├── <span class="node-l2">Stores metadata (About info) of all services</span>
+│   ├── <span class="node-l2">Providers list → Consumers search</span>
+│   └── <span class="node-l2">Tool: UDDI (Universal Description, Discovery & Integration)</span>
+│
+├── <span class="node-l1">Service Consumer (Requester)</span> — "The Customer"
+│   ├── <span class="node-l2">Needs a job done, doesn't write the code</span>
+│   ├── <span class="node-l2">FINDS service in Registry</span>
+│   └── <span class="node-l2">BINDS (connects) to the Provider</span>
+│
+└── <span class="node-l1">Service Contract</span> — "The Handshake"
+    ├── <span class="node-l2">Input: What consumer must send</span>
+    ├── <span class="node-l2">Output: What provider returns</span>
+    ├── <span class="node-l2">Errors: What happens if things go wrong</span>
+    └── <span class="node-l2">Format: WSDL (SOAP) or Swagger/OpenAPI (REST)</span></pre>
+  </div>
+  <div class="callout">
+    <span class="callout-icon">Workflow</span>
+    <p><strong>Step 1 — Publish:</strong> Provider tells Registry "I'm here!" → <strong>Step 2 — Find:</strong> Consumer asks Registry "Who can do X?" → <strong>Step 3 — Bind:</strong> Consumer reads Contract, connects directly to Provider, executes task.</p>
+  </div>
+</div>
+
+<div id="s8" class="section">
+  <div class="sec-header">
+    <span class="sec-num">08</span>
+    <h2 class="sec-title">8 Principles of Service Orientation</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>These are the "behavioral laws" every service must follow to be considered "True SOA". Think of them as the Constitution of SOA.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">8 Principles</div>
+    <pre><span class="node-root">Service Orientation Principles</span>
+│
+├── <span class="node-l1">1. Standardized Service Contract</span>
+│   └── <span class="node-l2">Common language (WSDL/Swagger) so everyone knows I/O format</span>
+│
+├── <span class="node-l1">2. Loose Coupling</span>
+│   └── <span class="node-l2">Consumer cares about Contract only, not how Provider works</span>
+│
+├── <span class="node-l1">3. Abstraction</span>
+│   └── <span class="node-l2">Hide the guts — only Input/Output gates are visible</span>
+│
+├── <span class="node-l1">4. Reusability</span>
+│   └── <span class="node-l2">Logic broken into small chunks serving multiple applications</span>
+│
+├── <span class="node-l1">5. Autonomy</span>
+│   └── <span class="node-l2">Each service is boss of its own world — own resources, own DB</span>
+│
+├── <span class="node-l1">6. Statelessness</span>
+│   └── <span class="node-l2">All data needed for a task must be IN the request itself</span>
+│
+├── <span class="node-l1">7. Discoverability</span>
+│   └── <span class="node-l2">Services tagged with metadata, stored in Registry — findable</span>
+│
+└── <span class="node-l1">8. Composability (Orchestration)</span>
+    └── <span class="node-l2">Small services chained together to make a "Super Service"</span></pre>
+  </div>
+</div>
+
+<div id="s9" class="section">
+  <div class="sec-header">
+    <span class="sec-num">09</span>
+    <h2 class="sec-title">Web Services</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>Before Web Services, Java software could only talk to Java, Windows software only to Windows — "walled gardens." Web Services broke those walls by using the internet's own language (HTTP + XML/JSON) as a universal translator.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p>A <strong>Web Service</strong> is a standardized software system designed to support interoperable machine-to-machine interaction over a network using standard internet protocols (HTTP) and data formats (XML/JSON).</p>
+  </div>
+  <div class="sub-heading">3 Pillars of Web Services</div>
+  <div class="tree">
+    <div class="tree-title">How Web Services Work</div>
+    <pre><span class="node-root">Web Services</span>
+│
+├── <span class="node-l1">A. Common Language (XML / JSON)</span>
+│   ├── <span class="node-l2">XML → used by SOAP services</span>
+│   └── <span class="node-l2">JSON → used by REST services</span>
+│
+├── <span class="node-l1">B. Common Transport (HTTP/HTTPS)</span>
+│   └── <span class="node-l2">Every language can send HTTP requests. Most firewalls allow it.</span>
+│
+└── <span class="node-l1">C. Interface + Contract</span>
+    ├── <span class="node-l2">Interface: The URL endpoint — where you connect</span>
+    └── <span class="node-l2">Contract: Machine-readable document defining rules</span></pre>
+  </div>
+  <div class="sub-heading">SOAP vs REST</div>
+  <table class="compare-table">
+    <tr><th>Feature</th><th>SOAP</th><th>REST</th></tr>
+    <tr><td class="feature-col">Format</td><td>Strictly XML only</td><td>JSON (most common), XML, plain text</td></tr>
+    <tr><td class="feature-col">Protocol</td><td>Own protocol (HTTP, SMTP, TCP)</td><td>Standard HTTP methods (GET/POST/PUT/DELETE)</td></tr>
+    <tr><td class="feature-col">State</td><td>Can be stateful or stateless</td><td>Always stateless</td></tr>
+    <tr><td class="feature-col">Best for</td><td>Banking, Enterprise, High Security</td><td>Mobile apps, Web APIs, Speed</td></tr>
+    <tr><td class="feature-col">Analogy</td><td>Formal registered letter</td><td>Text message</td></tr>
+  </table>
+</div>
+
+<div id="s10" class="section">
+  <div class="sec-header">
+    <span class="sec-num">10</span>
+    <h2 class="sec-title">SOAP & WSDL</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation — SOAP</div>
+    <p>SOAP is like a formal envelope system. Your message (data) goes inside a structured envelope with address, metadata, and error report sections. Designed for heavy-duty enterprise communication.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition — SOAP</div>
+    <p><strong>SOAP (Simple Object Access Protocol)</strong> is an XML-based network protocol for exchanging structured data between services. Originally designed by Microsoft (1998), now maintained by W3C. It operates over HTTP, SMTP, and TCP.</p>
+  </div>
+  <div class="sub-heading">Anatomy of a SOAP Message</div>
+  <div class="soap-anatomy">
+    <div class="soap-part" style="background:rgba(80,70,229,0.05)">
+      <div class="soap-letter" style="color:var(--accent)">E</div>
+      <div>
+        <div class="soap-name">Envelope <span class="soap-req" style="background:rgba(80,70,229,0.1);color:var(--accent)">Required</span></div>
+        <div class="soap-desc">Wrapper of the entire document. Identifies it as SOAP and sets the namespace (version).</div>
+      </div>
+    </div>
+    <div class="soap-part">
+      <div class="soap-letter" style="color:var(--accent4)">H</div>
+      <div>
+        <div class="soap-name">Header <span class="soap-req" style="background:rgba(243,156,18,0.1);color:var(--accent4)">Optional</span></div>
+        <div class="soap-desc">Metadata / instructions written on the envelope (auth tokens, routing info).</div>
+      </div>
+    </div>
+    <div class="soap-part" style="background:rgba(0,184,148,0.05)">
+      <div class="soap-letter" style="color:var(--accent3)">B</div>
+      <div>
+        <div class="soap-name">Body <span class="soap-req" style="background:rgba(0,184,148,0.1);color:var(--accent3)">Required</span></div>
+        <div class="soap-desc">The actual letter — the real request/response data being sent.</div>
+      </div>
+    </div>
+    <div class="soap-part">
+      <div class="soap-letter" style="color:var(--accent2)">F</div>
+      <div>
+        <div class="soap-name">Fault <span class="soap-req" style="background:rgba(229,70,122,0.1);color:var(--accent2)">Optional</span></div>
+        <div class="soap-desc">Error report — placed inside Body when something goes wrong.</div>
+      </div>
+    </div>
+  </div>
+  <div class="easy-box" style="margin-top:1.5rem">
+    <div class="easy-label">Easy Explanation — WSDL</div>
+    <p>WSDL is the instruction manual for a web service. It's a machine-readable XML file that tells any program: what number to dial, what language to speak, what questions to ask, and what answers to expect.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition — WSDL</div>
+    <p><strong>WSDL (Web Services Description Language)</strong> is an XML-based interface definition language that formally describes the functions, data types, protocols, and endpoints of a web service. Developed by IBM & Microsoft, identified by W3C on June 26, 2007.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">WSDL Architecture (4 Elements)</div>
+    <pre><span class="node-root">WSDL Document</span>
+│
+├── <span class="node-l1">Types</span> (Abstract Definition)
+│   └── <span class="node-l2">Data types the service uses — defined using XML Schema</span>
+│
+├── <span class="node-l1">Message</span> (Abstract Definition)
+│   └── <span class="node-l2">Individual pieces of data exchanged in each operation</span>
+│
+├── <span class="node-l1">Port Types</span> (Abstract Definition)
+│   └── <span class="node-l2">Available operations + their input/output messages</span>
+│
+└── <span class="node-l1">Binding</span> (Protocol & Physical Location)
+    └── <span class="node-l2">Communication protocol and message format per operation</span></pre>
+  </div>
+  <div class="sub-heading">The SOA Trio — Everything Connected</div>
+  <table class="compare-table">
+    <tr><th>Component</th><th>Role</th><th>Analogy</th></tr>
+    <tr><td class="feature-col">UDDI</td><td>The Registry — directory of all services</td><td>Yellow Pages</td></tr>
+    <tr><td class="feature-col">WSDL</td><td>The Contract — XML description of the service</td><td>Instruction Manual</td></tr>
+    <tr><td class="feature-col">SOAP</td><td>The Protocol — XML envelope to deliver data</td><td>The Envelope + Letter</td></tr>
+  </table>
+</div>
+
+<div id="s11" class="section">
+  <div class="sec-header">
+    <span class="sec-num">11</span>
+    <h2 class="sec-title">Message Exchange Patterns (MEPs)</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>MEPs define the "conversation style" — how SOAP messages flow between client and server. Who speaks first? Does the sender wait for a reply? Is it one-to-one or broadcast?</p>
+  </div>
+  <div class="mep-grid">
+    <div class="mep-card">
+      <div class="mep-icon" style="color:var(--accent)">⇄</div>
+      <div class="mep-name">Request-Response</div>
+      <div class="mep-desc">Client sends, waits (locked) for reply. Synchronous. Most common.<br><br><em>Example: Currency converter.</em></div>
+    </div>
+    <div class="mep-card">
+      <div class="mep-icon" style="color:var(--accent3)">→</div>
+      <div class="mep-name">One-Way</div>
+      <div class="mep-desc">Client sends and moves on immediately. Fire-and-forget. Asynchronous.<br><br><em>Example: System logging.</em></div>
+    </div>
+    <div class="mep-card">
+      <div class="mep-icon" style="color:var(--accent4)">←</div>
+      <div class="mep-name">Solicit-Response</div>
+      <div class="mep-desc">Provider initiates contact and waits for consumer's reply. Reverse request.<br><br><em>Example: Callbacks.</em></div>
+    </div>
+    <div class="mep-card">
+      <div class="mep-icon" style="color:var(--accent2)">⊕</div>
+      <div class="mep-name">Notification</div>
+      <div class="mep-desc">Provider broadcasts to many consumers. No reply expected.<br><br><em>Example: Stock price alerts.</em></div>
+    </div>
+  </div>
+</div>
+
+<div id="s12" class="section">
+  <div class="sec-header">
+    <span class="sec-num">12</span>
+    <h2 class="sec-title">Coordination: Orchestration vs Choreography</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>When multiple services need to work together, someone has to manage the flow. There are two approaches: one with a "boss" (Orchestration) and one with no boss (Choreography).</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0">
+    <div class="def-box" style="border-left-color:var(--accent)">
+      <div class="def-label">Orchestration — "The Conductor"</div>
+      <p>A central brain directs every service. Calls Service A, waits, then decides to call B or C. Full visibility of the process. Best for: complex workflows like Loan Approvals.</p>
+    </div>
+    <div class="def-box" style="border-left-color:var(--accent3)">
+      <div class="def-label">Choreography — "The Dancers"</div>
+      <p>No central ruler. Services react to events published by others. When Service A finishes, it emits an event — B reacts. Best for: high-scale microservices, event-driven apps.</p>
+    </div>
+  </div>
+  <table class="compare-table">
+    <tr><th>Feature</th><th>Orchestration</th><th>Choreography</th></tr>
+    <tr><td class="feature-col">Control</td><td>Centralized (The Conductor)</td><td>Decentralized (The Dancers)</td></tr>
+    <tr><td class="feature-col">Visibility</td><td>High — central map exists</td><td>Low — hard to see big picture</td></tr>
+    <tr><td class="feature-col">Coupling</td><td>Services depend on Controller</td><td>Services are highly independent</td></tr>
+    <tr><td class="feature-col">Best For</td><td>Banking, Insurance, Loans</td><td>Microservices, Event-driven apps</td></tr>
+  </table>
+</div>
+
+<div id="s13" class="section">
+  <div class="sec-header">
+    <span class="sec-num">13</span>
+    <h2 class="sec-title">Data Integrity: Atomic vs Business Activities</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>When multiple services act on data together, things can go wrong. "Atomic" transactions handle quick, critical operations with all-or-nothing rules. "Business Activities" handle long-running operations where you use "compensating actions" instead of rollback.</p>
+  </div>
+  <div class="tree">
+    <div class="tree-title">Data Integrity Mechanisms</div>
+    <pre><span class="node-root">Data Integrity in SOA</span>
+│
+├── <span class="node-l1">Atomic Transactions</span> — "The Micro View" (Milliseconds)
+│   ├── <span class="node-l2">Follows ACID principles</span>
+│   │   ├── <span class="node-l3">Atomicity: All-or-Nothing rule</span>
+│   │   ├── <span class="node-l3">Consistency: DB moves from one valid state to another</span>
+│   │   ├── <span class="node-l3">Isolation: No one sees the "middle" of a transaction</span>
+│   │   └── <span class="node-l3">Durability: Once committed, data survives power outages</span>
+│   ├── <span class="node-l2">Mechanism: Two-Phase Commit (2PC)</span>
+│   │   ├── <span class="node-l3">Phase 1 (Prepare): "Is everyone ready to save?"</span>
+│   │   └── <span class="node-l3">Phase 2 (Commit/Rollback): All yes → Save. Any no → Erase.</span>
+│   └── <span class="node-l2">Uses Locking: data row is frozen during transaction</span>
+│
+└── <span class="node-l1">Business Activities</span> — "The Macro View" (Minutes/Days)
+    ├── <span class="node-l2">Can't lock a database for 2 days — system would freeze</span>
+    ├── <span class="node-l2">Uses Compensation Logic instead of rollback</span>
+    │   └── <span class="node-l3">Example: Can't "undo" a hotel booking — create a new Cancellation/Refund entry</span>
+    └── <span class="node-l2">No locking — resources stay open while activity is in progress</span></pre>
+  </div>
+</div>
+
+<div id="s14" class="section">
+  <div class="sec-header">
+    <span class="sec-num">14</span>
+    <h2 class="sec-title">Three Functional Service Layers</h2>
+  </div>
+  <div class="easy-box">
+    <div class="easy-label">Easy Explanation</div>
+    <p>SOA organizes services into a 3-floor building. Ground floor = technical plumbing. Middle floor = business "things" (customers, products). Top floor = business processes that direct everything.</p>
+  </div>
+  <div class="layers-stack">
+    <div class="layer layer-c">
+      <div class="layer-label">Top Layer — C</div>
+      <div class="layer-title">Orchestration Service Layer — "The Director"</div>
+      <p>Manages business <em>processes</em>. Doesn't own data — coordinates layers below. Workflow-driven (step 1 → step 2 → step 3). Highly specific, low reusability. Change rate: HIGH (business rules change often).</p>
+    </div>
+    <div class="layer layer-b">
+      <div class="layer-label">Middle Layer — B</div>
+      <div class="layer-title">Business Service Layer — "The Building Blocks"</div>
+      <p>Represents real-world business objects (Customer, Product, Employee). Owns the data and handles CRUD operations. Very stable — the concept of "Customer" doesn't change often. Change rate: MODERATE.</p>
+    </div>
+    <div class="layer layer-a">
+      <div class="layer-label">Bottom Layer — A</div>
+      <div class="layer-title">Application Service Layer — "The Toolbox"</div>
+      <p>Pure technical utilities — security, logging, data transformation. No concept of "Customer" or "Order." Can be reused by ANY department. Change rate: LOW.</p>
+    </div>
+  </div>
+  <div class="callout good">
+    <span class="callout-icon">Why layers?</span>
+    <p>Change Email provider? Only touch Layer A. Change the Welcome Process? Only touch Layer C. Change the concept of "Customer"? Only touch Layer B. Clean, isolated, maintainable.</p>
+  </div>
+</div>
+
+<footer>
+  <span>SOA Master Notes</span>
+  <span style="color:rgba(255,255,255,0.2)">14 Topics · Complete Guide</span>
+</footer>
